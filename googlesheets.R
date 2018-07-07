@@ -1,3 +1,4 @@
+library(DBI)
 library(dplyr)
 library(tidyr)
 library(googlesheets)
@@ -41,6 +42,18 @@ tidy_tbls <- function(tbls){
   })
 }
 
+
+# Connect to Postgres -----------------------------------------------------
+
+con <- dbConnect(dbDriver("PostgreSQL"),
+                 dbname = "borderlands", 
+                 host = "localhost",
+                 user = "postgres",
+                 password = rstudioapi::askForPassword("Database password")
+)
+
+# Load VALUES -------------------------------------------------------------
+
 # name = '1а. Демографические показатели - ГОСУДАРСТВА'
 # endrow = 19
 
@@ -56,3 +69,18 @@ tbls = lapply(vars, function(X) gs_read(states, ws = X, range = cell_rows(2:endr
 res = tbls %>% 
   tidy_tbls() %>% 
   bind_rows()
+
+
+# Load INDEXES ------------------------------------------------------------
+
+idx = gs_title('Показатели') %>% gs_read()
+
+# dplyr::copy_to(con, res, 'VALUES',
+#                temporary = FALSE)
+
+# Load to Postgres --------------------------------------------------------
+
+dbWriteTable(con, c("data","INDEXES"), value=idx, overwrite=TRUE, row.names=FALSE)
+dbWriteTable(con, c("data","VALUES"), value=res, append=TRUE, row.names=FALSE)
+
+
