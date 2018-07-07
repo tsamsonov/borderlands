@@ -2,7 +2,7 @@ library(dplyr)
 library(tidyr)
 library(googlesheets)
 
-tbls_tidy <- function(tbls){
+tidy_tbls <- function(tbls){
   
   lapply(tbls, function(df){
     
@@ -26,24 +26,33 @@ tbls_tidy <- function(tbls){
       
       values %>% 
         bind_cols(sources) %>% 
-        select(ISOID = ISO,
-               IDXID = INDEX,
+        select(IDXID = INDEX,
+               ISOID = ISO,
                YEAR,
                VALUE,
                SRCID)
     } else {
       values %>% 
-        select(ISOID = ISO,
-               IDXID = INDEX,
+        select(IDXID = INDEX,
+               ISOID = ISO,
                YEAR,
                VALUE)
     }
   })
 }
 
-my_sheets <- gs_ls()
-states = gs_title('1а. Демографические показатели - ГОСУДАРСТВА')
-vars = gs_ws_ls(states)
-tbls = lapply(vars, function(X) gs_read(states, ws = X, range = "A2:L19"))
+# name = '1а. Демографические показатели - ГОСУДАРСТВА'
+# endrow = 19
 
-res = bind_rows(tbls_tidy)
+name = '1б. Демографические показатели - РЕГИОНЫ'
+endrow = 95
+
+my_sheets <- gs_ls()
+states = gs_title(name)
+vars = gs_ws_ls(states)
+
+tbls = lapply(vars, function(X) gs_read(states, ws = X, range = cell_rows(2:endrow)))
+
+res = tbls %>% 
+  tidy_tbls() %>% 
+  bind_rows()
