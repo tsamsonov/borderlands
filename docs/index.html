@@ -1,67 +1,182 @@
 <!DOCTYPE html>
-<html>
+<html >
+
 <head>
-	
-	<title>Quick Start - Leaflet</title>
 
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
-	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Атлас Российского пограничья</title>
+  <meta name="description" content="Атлас охватывает широкий круг проблем в сфере внешних связей, экономики, социальной и этнокультурной ситуации, охраны окружающей среды в приграничных регионах России и сопредельных стран">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+  <meta property="og:title" content="Атлас Российского пограничья" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Атлас охватывает широкий круг проблем в сфере внешних связей, экономики, социальной и этнокультурной ситуации, охраны окружающей среды в приграничных регионах России и сопредельных стран" />
+  <meta name="github-repo" content="tsamsonov/borderlands" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Атлас Российского пограничья" />
+  
+  <meta name="twitter:description" content="Атлас охватывает широкий круг проблем в сфере внешних связей, экономики, социальной и этнокультурной ситуации, охраны окружающей среды в приграничных регионах России и сопредельных стран" />
+  
+
+<meta name="author" content="Лаборатория геополитических исследований ИГ РАН">
 
 
-	
+<meta name="date" content="2018-07-28">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+
+<link rel="next" href="demo.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.2/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.4/datatables.js"></script>
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.1/leaflet.js"></script>
+<script src="libs/leaflet-providers-1.1.17/leaflet-providers.js"></script>
+<script src="libs/leaflet-providers-plugin-2.0.1/leaflet-providers-plugin.js"></script>
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
 </head>
+
 <body>
 
 
 
-<div id="mapid" style="width: 600px; height: 400px;"></div>
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Атлас Российского пограничья</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Введение</a></li>
+<li class="chapter" data-level="1" data-path="demo.html"><a href="demo.html"><i class="fa fa-check"></i><b>1</b> Население</a><ul>
+<li class="chapter" data-level="1.1" data-path="demo.html"><a href="demo.html#demo-dens"><i class="fa fa-check"></i><b>1.1</b> Размещение и плотность населения</a></li>
+<li class="chapter" data-level="1.2" data-path="demo.html"><a href="demo.html#demo-urban"><i class="fa fa-check"></i><b>1.2</b> Городское и сельское расселение</a></li>
+<li class="chapter" data-level="1.3" data-path="demo.html"><a href="demo.html#demo-situ"><i class="fa fa-check"></i><b>1.3</b> Демографическая ситуация</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="demo.html"><a href="demo.html#demo-situ-pop"><i class="fa fa-check"></i><b>1.3.1</b> Численность населения</a></li>
+<li class="chapter" data-level="1.3.2" data-path="demo.html"><a href="demo.html#demo-situ-re"><i class="fa fa-check"></i><b>1.3.2</b> Естественное воспроизводство населения</a></li>
+<li class="chapter" data-level="1.3.3" data-path="demo.html"><a href="demo.html#demo-situ-bir"><i class="fa fa-check"></i><b>1.3.3</b> Рождаемость</a></li>
+<li class="chapter" data-level="1.3.4" data-path="demo.html"><a href="demo.html#demo-situ-dea"><i class="fa fa-check"></i><b>1.3.4</b> Смертность</a></li>
+<li class="chapter" data-level="1.3.5" data-path="demo.html"><a href="demo.html#demo-situ-bab"><i class="fa fa-check"></i><b>1.3.5</b> Младенческая смертность</a></li>
+<li class="chapter" data-level="1.3.6" data-path="demo.html"><a href="demo.html#demo-situ-long"><i class="fa fa-check"></i><b>1.3.6</b> Продолжительность жизни</a></li>
+<li class="chapter" data-level="1.3.7" data-path="demo.html"><a href="demo.html#demo-situ-mig"><i class="fa fa-check"></i><b>1.3.7</b> Миграции</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="http://geopolitic.igras.ru"><img src="../img/logo.png" width=100px></a><li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Атлас Российского пограничья</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">Атлас Российского пограничья</h1>
+<h4 class="author"><em>Лаборатория геополитических исследований ИГ РАН</em></h4>
+<h4 class="date"><em>2018-07-28</em></h4>
+</div>
+<div id="d092d0b2d0b5d0b4d0b5d0bdd0b8d0b5" class="section level1 unnumbered">
+<h1>Введение</h1>
+<p>Атлас подготовлен в результате реализации исследовательского проекта Российского научного фонда «Российское пограничье: вызовы соседства» (грант №14-18-03621) и представляет собой комплексное научно-справочное картографическое произведение, призванное дать целостное представление о развитии приграничных регионов России и сопредельных стран. Атлас носит междисциплинарный и проспективный характер и допускает постоянное обновление информации. В его основу положен принцип полимаштабности: проблемы пограничья показаны на четырех уровнях – макрорегиональном, общегосударственном, региональном и локальном. Он объединяет карты, отражающие ситуацию вдоль всей линии российской границы с обеих ее сторон в европейской и азиатской частях российского пограничья и на их детально изученных на муниципальном уровне ключевых участках пограничья. Использованы передовые способы картографирования границ – от нанесения точечной экспертной информации до автоматизированной обработки данных дистанционного зондирования, пространственного анализа и интерполяции средствами ГИС.</p>
+<p>Атлас охватывает широкий круг проблем в сфере внешних связей, экономики, социальной и этнокультурной ситуации, охраны окружающей среды в приграничных регионах России и сопредельных стран. Значительное внимание уделено влиянию на развитие приграничного сотрудничества режима и функционирования границы в целом, исторической памяти и массовых стереотипов, «фантомным границам», утратившим свои главные функции, но продолжающим влиять на отношения людей и принимаемые решения. Интегрируя разнообразную информацию в разрезе всего пограничья и его отдельных частей, атлас представляет ее в систематизированной, сопоставимой и хорошо обозримой форме.</p>
+<p>Атлас содержит, во-первых, карты на традиционные сюжеты (дифференциации пограничья по демографическим и социально-экономическим показателям, морфологии российских границ по «возрасту» и происхождению, легитимности, этнической контрастности, экологических взаимосвязей и трансграничных угроз); во-вторых, карты на новые, неизвестные ранее темы (потенциал трансграничного сотрудничества, объекты нового строительства, роль границ в этнических и иных конфликтах, барьерность границ, повседневная жизнь и мотивы приграничной мобильности населения, историко-символический ландшафт, фантомные границы); в-третьих, карты на основе инновационных методов картографирования (плотности автодорожной сети, населенных пунктов, динамики землепользования и лесопользования).</p>
+<p>В работе восемь разделов: «Геополитическое положение», «Население», «Уровень жизни населения», «Экономика», «Динамика трансграничных взаимодействий», «Развитие трансграничных систем и экологические угрозы», «Конфликты в приграничье», «Соотношение культурных, ментальных и институциональных границ». Атлас содержит 85 карт в разном масштабе, их аналитические описания, табличный, графический и другой дополнительный материал и ориентирован на специалистов в области международных отношений и приграничного сотрудничества, а также на широкий круг читателей, интересующихся изучением российского пограничья (пограничными исследованиями).</p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="demo.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
-
-	var mymap = L.map('mapid').setView([51.505, -0.09], 13);
-
-	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-		maxZoom: 18,
-		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-		id: 'mapbox.streets'
-	}).addTo(mymap);
-
-	L.marker([51.5, -0.09]).addTo(mymap)
-		.bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
-
-	L.circle([51.508, -0.11], 500, {
-		color: 'red',
-		fillColor: '#f03',
-		fillOpacity: 0.5
-	}).addTo(mymap).bindPopup("I am a circle.");
-
-	L.polygon([
-		[51.509, -0.08],
-		[51.503, -0.06],
-		[51.51, -0.047]
-	]).addTo(mymap).bindPopup("I am a polygon.");
-
-
-	var popup = L.popup();
-
-	function onMapClick(e) {
-		popup
-			.setLatLng(e.latlng)
-			.setContent("You clicked the map at " + e.latlng.toString())
-			.openOn(mymap);
-	}
-
-	mymap.on('click', onMapClick);
-
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["borderlands.pdf", "borderlands.epub"],
+"toc": {
+"collapse": "section"
+}
+});
+});
 </script>
 
-
-
 </body>
+
 </html>

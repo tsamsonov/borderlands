@@ -88,5 +88,3 @@ res = tbls %>%
 
 
 dbWriteTable(con, c("VALUES"), value=res, append=TRUE, row.names=FALSE)
-
-
