@@ -45,23 +45,14 @@ tidy_tbls <- function(tbls){
 
 # Connect to DB -----------------------------------------------------
 
-#Postgres
-con <- dbConnect(RPostgreSQL::PostgreSQL(),
-                 dbname = "borderlands", 
-                 host = "localhost",
-                 user = "postgres",
-                 password = rstudioapi::askForPassword("Database password")
-)
-
-#SQLite
 con <- dbConnect(RSQLite::SQLite(),
-                 dbname = "docs/borderlands.db"
+                 dbname = "data/borderlands.db"
 )
 
 # Load INDEXES ------------------------------------------------------------
 
-idx = gs_title('Показатели') %>% gs_read()
-dbWriteTable(con, c("INDEXES"), value=idx, overwrite=TRUE, row.names=FALSE)
+# idx = gs_title('Показатели') %>% gs_read()
+# dbWriteTable(con, c("INDEXES"), value=idx, overwrite=TRUE, row.names=FALSE)
 
 # Load VALUES -------------------------------------------------------------
 
@@ -79,12 +70,14 @@ tbls = lapply(vars, function(X) gs_read(states, ws = X, range = cell_rows(2:endr
 
 res = tbls %>% 
   tidy_tbls() %>% 
-  bind_rows()
+  bind_rows() %>% 
+  dplyr::filter(!is.na(VALUE))
 
 # dplyr::copy_to(con, res, 'VALUES',
 #                temporary = FALSE)
 
 # Load to Postgres --------------------------------------------------------
-
+# Countries
+# dbWriteTable(con, c("VALUES"), value=res, overwrite=TRUE, row.names=FALSE)
 
 dbWriteTable(con, c("VALUES"), value=res, append=TRUE, row.names=FALSE)
