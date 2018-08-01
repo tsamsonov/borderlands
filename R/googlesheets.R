@@ -13,11 +13,10 @@ tidy_tbls <- function(tbls){
       which()
     
     srcols = grep('Source', colnames(df))
-    # yrcols = srcols - length(srcols)
     
     values = df %>% 
       gather(YEAR, VALUE, yrcols) %>% 
-      mutate(VALUE = as.numeric(VALUE),
+      mutate(VALUE = as.numeric(gsub(',', '.', VALUE)),
              YEAR = as.integer(YEAR))
     
     if (length(srcols) == length(yrcols)) {
@@ -27,21 +26,23 @@ tidy_tbls <- function(tbls){
       
       values %>% 
         bind_cols(sources) %>% 
-        select(IDXID = INDEX,
+        mutate(IDXID = as.integer(INDEX),
+               SRCID = as.integer(SRCID)) %>% 
+        dplyr::select(IDXID,
                ISOID = ISO,
                YEAR,
                VALUE,
                SRCID)
     } else {
-      values %>% 
-        select(IDXID = INDEX,
+      values %>%
+        mutate(IDXID = as.integer(INDEX)) %>% 
+        dplyr::select(IDXID,
                ISOID = ISO,
                YEAR,
                VALUE)
     }
   })
 }
-
 
 # Connect to DB -----------------------------------------------------
 
@@ -51,33 +52,44 @@ con <- dbConnect(RSQLite::SQLite(),
 
 # Load INDEXES ------------------------------------------------------------
 
-# idx = gs_title('Показатели') %>% gs_read()
-# dbWriteTable(con, c("INDEXES"), value=idx, overwrite=TRUE, row.names=FALSE)
+idx = gs_title('Показатели') %>% gs_read()
+dbWriteTable(con, c("INDEXES"), value=idx, overwrite=TRUE, row.names=FALSE)
+
+# my_sheets <- gs_ls()
 
 # Load VALUES -------------------------------------------------------------
 
-# name = '1а. Демографические показатели - ГОСУДАРСТВА'
-# endrow = 19
 
-name = '1б. Демографические показатели - РЕГИОНЫ'
-endrow = 95
+endrows = c(
+  '1а. Демографические показатели - ГОСУДАРСТВА' = 19,
+  '1б. Демографические показатели - РЕГИОНЫ' = 95
+)
 
-my_sheets <- gs_ls()
-states = gs_title(name)
-vars = gs_ws_ls(states)
+out_table = NULL
 
-tbls = lapply(vars, function(X) gs_read(states, ws = X, range = cell_rows(2:endrow)))
+for (i in 1:length(endrows)) {
+  
+  endrow = endrows[i]
+  tbl_name = attr(endrow, 'name') %>% gs_title()
+  
+  vars =  gs_ws_ls(tbl_name)
+  
+  tbls = lapply(vars, function(X) gs_read(tbl_name, 
+                                          ws = X,
+                                          col_types = readr::cols(.default = "c"),
+                                          range = cell_rows(2:endrow)))
+  
+  res = tbls %>% 
+    tidy_tbls() %>% 
+    bind_rows() %>% 
+    dplyr::filter(!is.na(VALUE))
+  
+  if (i == 1)
+    out_table = res
+  else
+    out_table = out_table %>% bind_rows(res)
 
-res = tbls %>% 
-  tidy_tbls() %>% 
-  bind_rows() %>% 
-  dplyr::filter(!is.na(VALUE))
+}
 
-# dplyr::copy_to(con, res, 'VALUES',
-#                temporary = FALSE)
-
-# Load to Postgres --------------------------------------------------------
-# Countries
-# dbWriteTable(con, c("VALUES"), value=res, overwrite=TRUE, row.names=FALSE)
-
-dbWriteTable(con, c("VALUES"), value=res, append=TRUE, row.names=FALSE)
+# Load to DB --------------------------------------------------------
+dbWriteTable(con, c("VALUES"), value=out_table, overwrite=TRUE, row.names=FALSE)
