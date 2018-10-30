@@ -28,7 +28,8 @@ normalize_delta = function(x, y, method = 'percentage') {
   }
 }
 
-mapplot <- function(data, idxid, year, normalize = 'percentage', intervals = 6, style = 'jenks', palette = 'YlOrRd') {
+mapplot <- function(data, idxid, year, normalize = 'percentage', 
+                    intervals = 6, style = 'jenks', palette = 'YlOrRd') {
   
   stopifnot(length(year) < 3)
   
@@ -62,6 +63,8 @@ mapplot <- function(data, idxid, year, normalize = 'percentage', intervals = 6, 
       bipolar = 1
     } else if (normalize == 'ratio') {
       unit = 'доля'
+    } else if (normalize == 'delta') {
+      bipolar = 1
     }
   }
   
@@ -156,8 +159,8 @@ mapplot <- function(data, idxid, year, normalize = 'percentage', intervals = 6, 
                          style = list("padding" = "5 px",
                                       "font-style" = "semibold",
                                       "font-size" = "12px")
-                       )
-      )
+                       )) %>% 
+      setView(lat = 50, lng = 50, zoom = 4)
   } else {
     
     tmap_mode("view")
@@ -172,9 +175,9 @@ mapplot <- function(data, idxid, year, normalize = 'percentage', intervals = 6, 
                     col = 'white',
                     lwd = 1) +
       tm_shape(data$rus_border) +
-        # tm_lines(col = "black",
-        #          alpha = 0.2,
-        #          lwd = 5) +
+        tm_lines(col = "black",
+                 alpha = 0.2,
+                 lwd = 5) +
         tm_lines(col = "black",
                  alpha = 0.8,
                  lwd = 1) +
@@ -184,7 +187,8 @@ mapplot <- function(data, idxid, year, normalize = 'percentage', intervals = 6, 
         tm_bubbles(size = "VALUE", 
                    col = "red", 
                    legend.max.symbol.size = 5,
-                   scale = 4, alpha = 0.5)
+                   scale = 4, alpha = 0.5) +
+      tm_view(set.view = c(50, 50, 4))
     
     # m = addCircles(m, lng = ~lon, lat = ~lat, weight = 1,
     #                radius = ~VALUE * 0.01)

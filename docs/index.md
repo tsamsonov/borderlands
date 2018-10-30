@@ -1,7 +1,7 @@
 --- 
 title: "Атлас Российского пограничья"
 author: "Лаборатория геополитических исследований ИГ РАН"
-date: "2018-07-28"
+date: "2018-10-30"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
