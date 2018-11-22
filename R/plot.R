@@ -94,73 +94,98 @@ mapplot <- function(data, idxid, year, normalize = 'percentage',
   ) %>% lapply(htmltools::HTML)
   
   if (sptype == 'int' || length(year) == 2) {
-    leaflet(mapdata) %>% 
-      addProviderTiles(providers$Wikimedia,
-                       options = providerTileOptions(detectRetina = TRUE)) %>% 
-      addPolygons(data = data$back,
-                  color = "#000000",
-                  fillOpacity = 0,
-                  opacity = 0.2,
-                  weight = 4) %>% 
-      addPolygons(color = "#444444",
-                  weight = 0.5,
-                  smoothFactor = 0.5,
-                  opacity = 1,
-                  fillOpacity = 0.8,
-                  fillColor = ~qpal(VALUE),
-                  highlightOptions = highlightOptions(
-                    color = "white", 
-                    weight = 2, 
-                    bringToFront = TRUE, 
-                    sendToBack = TRUE),
-                  label = labels,
-                  labelOptions = labelOptions(
-                    textsize = "14px",
-                    direction = "auto")
-      ) %>% 
-      addLegend(pal = legendpal, 
-                values = ~VALUE, 
-                opacity = 1, 
-                title = unit,
-                labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE))) %>%
-      addPolylines(data = data$rus_border, 
-                   color = "#000000", 
-                   smoothFactor = 0.5,
-                   opacity = 0.2, 
-                   weight = 5) %>% 
-      addPolylines(data = data$rus_border, 
-                   color = "#000000", 
-                   smoothFactor = 0.5,
-                   opacity = 0.8, 
-                   weight = 1) %>% 
-      addCircleMarkers(data = data$cities, 
-                       radius = 2,
-                       weight = 1,
-                       color = 'black',
-                       label = ~htmltools::htmlEscape(NAME_RU),
-                       labelOptions = labelOptions(
-                         permanent = T,
-                         # noHide = F,
-                         textOnly = TRUE,
-                         offset = c(3,-3),
-                         style = list("padding" = "5 px")
-                       )
-      ) %>% 
-      addCircleMarkers(data = data$capitals, 
-                       radius = 3,
-                       weight = 1,
-                       color = 'black',
-                       label = ~htmltools::htmlEscape(NAME_RU),
-                       labelOptions = labelOptions(
-                         permanent = T,
-                         # noHide = F,
-                         textOnly = TRUE,
-                         offset = c(5,-5),
-                         style = list("padding" = "5 px",
-                                      "font-style" = "semibold",
-                                      "font-size" = "12px")
-                       )) %>% 
-      setView(lat = 50, lng = 50, zoom = 4)
+    
+    tmap_mode("view")
+    ## tmap mode set to interactive viewing
+    tm_basemap('OpenStreetMap') +
+    tm_shape(data$back) +
+      tm_borders(col = "black",
+                 alpha = 0.2,
+                 lwd = 4) +
+    tm_shape(mapdata) + 
+      tm_polygons('VALUE',
+                  palette = palette,
+                  breaks = breaks,
+                  lwd = 1) +
+    tm_shape(data$rus_border) +
+      tm_lines(col = "black",
+               alpha = 0.2,
+               lwd = 5) +
+      tm_lines(col = "black",
+               alpha = 0.8,
+               lwd = 1) +
+    tm_shape(data$cities) +
+      tm_dots(shape = 19, col = 'white', alpha = 0.8, size = 0.01) +
+      tm_text('NAME_RU', auto.placement = TRUE, remove.overlap = TRUE) +
+    tm_view(set.view = c(50, 50, 4))
+    # 
+    # leaflet(mapdata) %>% 
+    #   addProviderTiles(providers$Wikimedia,
+    #                    options = providerTileOptions(detectRetina = TRUE)) %>% 
+    #   addPolygons(data = data$back,
+    #               color = "#000000",
+    #               fillOpacity = 0,
+    #               opacity = 0.2,
+    #               weight = 4) %>% 
+    #   addPolygons(color = "#444444",
+    #               weight = 0.5,
+    #               smoothFactor = 0.5,
+    #               opacity = 1,
+    #               fillOpacity = 0.8,
+    #               fillColor = ~qpal(VALUE),
+    #               highlightOptions = highlightOptions(
+    #                 color = "white", 
+    #                 # bringToFront = TRUE, 
+    #                 # sendToBack = TRUE,
+    #                 weight = 2),
+    #               label = labels,
+    #               labelOptions = labelOptions(
+    #                 textsize = "14px",
+    #                 direction = "auto")
+    #   ) %>% 
+    #   addLegend(pal = legendpal, 
+    #             values = ~VALUE, 
+    #             opacity = 1, 
+    #             title = unit,
+    #             labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE))) %>%
+    #   addPolylines(data = data$rus_border, 
+    #                color = "#000000", 
+    #                smoothFactor = 0.5,
+    #                opacity = 0.2, 
+    #                weight = 5) %>% 
+    #   addPolylines(data = data$rus_border, 
+    #                color = "#000000", 
+    #                smoothFactor = 0.5,
+    #                opacity = 0.8, 
+    #                weight = 1) %>% 
+    #   addCircleMarkers(data = data$cities, 
+    #                    radius = 2,
+    #                    weight = 1,
+    #                    color = 'black',
+    #                    label = ~htmltools::htmlEscape(NAME_RU),
+    #                    labelOptions = labelOptions(
+    #                      permanent = T,
+    #                      # noHide = F,
+    #                      textOnly = TRUE,
+    #                      offset = c(3,-3),
+    #                      style = list("padding" = "5 px")
+    #                    )
+    #   ) %>% 
+    #   addCircleMarkers(data = data$capitals, 
+    #                    radius = 3,
+    #                    weight = 1,
+    #                    color = 'black',
+    #                    label = ~htmltools::htmlEscape(NAME_RU),
+    #                    labelOptions = labelOptions(
+    #                      permanent = T,
+    #                      # noHide = F,
+    #                      textOnly = TRUE,
+    #                      offset = c(5,-5),
+    #                      style = list("padding" = "5 px",
+    #                                   "font-style" = "semibold",
+    #                                   "font-size" = "12px")
+    #                    )) %>% 
+    #   setView(lat = 50, lng = 50, zoom = 4)
   } else {
     
     tmap_mode("view")
@@ -183,6 +208,7 @@ mapplot <- function(data, idxid, year, normalize = 'percentage',
                  lwd = 1) +
       tm_shape(data$cities) +
         tm_dots(shape = 19, col = 'white', alpha = 0.8, size = 0.01) +
+        tm_text('NAME_RU', auto.placement = TRUE, remove.overlap = TRUE) +
       tm_shape(mapdata) + 
         tm_bubbles(size = "VALUE", 
                    col = "red", 
