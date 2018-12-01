@@ -1,223 +1,164 @@
-class_bipolar <- function(values, intervals, style){
+# idxid = 0
+# year = c(2009, 2016)
+# segment = 2
+
+gradplot = function(data, idxid, year, segment) {
+  tab = data$values %>% 
+    dplyr::filter(IDXID == idxid, YEAR %in% year)
   
-  filter = values >= 0
+  plotdata = data$gradients %>%
+    filter(SEGMENT == segment) %>% 
+    mutate(distance = cumsum(LENGTH) - LENGTH) %>% 
+    left_join(tab, by = c("ISOID1" = "ISOID")) %>% 
+    left_join(tab, by = c("ISOID2" = "ISOID", "YEAR" = "YEAR")) %>% 
+    mutate(ratio = VALUE.x / VALUE.y,
+           gradient = if_else(ratio < 1, -1/ratio + 1, ratio - 1)) %>% 
+    arrange(ORD)
   
-  int_pos = trunc(intervals/2)
-  int_neg = trunc(intervals/2)
+  ymn = min(plotdata$gradient)
+  ymx = max(plotdata$gradient)
   
-  breaks_positive = classIntervals(values[filter], int_pos, style)$brks
-  breaks_negative = classIntervals(values[!filter], int_neg, style)$brks
+  ymin = -max(abs(ymn), abs(ymx))
+  ymax = max(abs(ymn), abs(ymx))
   
-  breaks = c(
-    breaks_negative[-length(breaks_negative)],
-    0,
-    breaks_positive[-1]
+  # Создаем вертикальные линии для стран
+  countries = filter(plotdata, ENTER == 1, YEAR == year[1])
+  
+  line = list(
+    type = "line",
+    line = list(color = toRGB('black')),
+    xref = "x",
+    yref = "y"
   )
   
-  return(breaks)
+  lines = list()
+  xcenters = vector()
   
-}
-
-normalize_delta = function(x, y, method = 'percentage') {
-  if (method == 'percentage') {
-    100 * (y - x) / x
-  } else if (method == 'ratio') {
-    y / x
-  } else if (method == 'delta') {
-    y - x
+  for (i in 1:nrow(countries)){
+    line[["y0"]] = countries[i, "distance"]
+    line[["y1"]] = countries[i, "distance"]
+    line[["x0"]] = ymin
+    line[["x1"]] = ymax
+    lines = c(lines, list(line))
+    xcenters[i] = mean(c(countries[i, "distance"], countries[i+1, "distance"]))
   }
-}
-
-mapplot <- function(data, idxid, year, normalize = 'percentage', 
-                    intervals = 6, style = 'jenks', palette = 'YlOrRd') {
+  xcenters[i] = countries[i, "distance"] + 0.5 * countries[i, "LENGTH_PART"]
   
-  stopifnot(length(year) < 3)
+  line[["y0"]] = countries[i, "distance"] + countries[i, "LENGTH_PART"]
+  line[["y1"]] = countries[i, "distance"] + countries[i, "LENGTH_PART"]
+  line[["x0"]] = ymin
+  line[["x1"]] = ymax
+  lines = c(lines, list(line))
   
-  unit = data$indexes %>% 
-    filter(IDXID == idxid) %>% 
-    pull(UNITS)
+  # Создаем вертикальные линии для субъектов РФ
+  regionsrf = filter(plotdata, ENTER1 == 1, YEAR == year[1])
   
-  bipolar = data$indexes %>% 
-    filter(IDXID == idxid) %>% 
-    pull(BIPOLAR)
+  line = list(
+    type = "line",
+    opacity = 1,
+    line = list(color = "grey", width = 1),
+    xref = "x",
+    yref = "y"
+  )
   
-  # print(bipolar)
-  
-  sptype = data$indexes %>% 
-    filter(IDXID == idxid) %>% 
-    pull(SPTYPE)
-  
-  df = data$values %>% 
-    filter(IDXID == idxid, YEAR %in% year)
-  
-  # print(df)
-  
-  if (length(year) == 2) {
-    df = df %>% 
-      group_by(IDXID, ISOID) %>%
-      arrange(YEAR) %>%
-      summarise(VALUE = normalize_delta(first(VALUE), last(VALUE)), normalize)
-    
-    if (normalize == 'percentage') {
-      unit = '%'
-      bipolar = 1
-    } else if (normalize == 'ratio') {
-      unit = 'доля'
-    } else if (normalize == 'delta') {
-      bipolar = 1
-    }
+  lines1 = list()
+  xcenters1 = vector()
+  for (i in 1:nrow(regionsrf)){
+    line[["y0"]] = regionsrf[i, "distance"]
+    line[["y1"]] = regionsrf[i, "distance"]
+    line[["x0"]] = 0
+    line[["x1"]] = ymax
+    lines1 = c(lines1, list(line))
+    xcenters1[i] = mean(c(regionsrf[i, "distance"], regionsrf[i+1, "distance"]))
   }
+  xcenters1[i] = regionsrf[i, "distance"] + 0.5 * regionsrf[i, "LENGTH"]
   
-  # print(bipolar)
+  # Создаем вертикальные линии для субъектов зарубежных государств
+  regionsfor = filter(plotdata, ENTER2 == 1, YEAR == year[1])
   
-  mapdata = data$regions %>% left_join(df, by = "ISOID")
+  line = list(
+    type = "line",
+    opacity = 1,
+    line = list(color = "grey", width = 1),
+    xref = "x",
+    yref = "y"
+  )
   
-  breaks = NULL
-  
-  if (bipolar == 1)
-    breaks = class_bipolar(mapdata$VALUE, intervals, style)
-  else
-    breaks = unique(classIntervals(mapdata$VALUE, intervals, style)$brks)
-    
-  
-  qpal = colorBin(palette, mapdata$VALUE,
-                   bins = breaks)
-  
-  legendpal = colorBin(palette, 
-                        mapdata$VALUE,
-                        reverse = TRUE,
-                        bins = breaks)
-  
-  labels = sprintf(
-    "<strong>%s</strong><br/>%g %s",
-    mapdata$name_local, mapdata$VALUE, unit
-  ) %>% lapply(htmltools::HTML)
-  
-  if (sptype == 'int' || length(year) == 2) {
-    
-    tmap_mode("view")
-    ## tmap mode set to interactive viewing
-    tm_basemap('OpenStreetMap') +
-    tm_shape(data$back) +
-      tm_borders(col = "black",
-                 alpha = 0.2,
-                 lwd = 4) +
-    tm_shape(mapdata) + 
-      tm_polygons('VALUE',
-                  palette = palette,
-                  breaks = breaks,
-                  lwd = 1) +
-    tm_shape(data$rus_border) +
-      tm_lines(col = "black",
-               alpha = 0.2,
-               lwd = 5) +
-      tm_lines(col = "black",
-               alpha = 0.8,
-               lwd = 1) +
-    tm_shape(data$cities) +
-      tm_dots(shape = 19, col = 'white', alpha = 0.8, size = 0.01) +
-      tm_text('NAME_RU', auto.placement = TRUE, remove.overlap = TRUE) +
-    tm_view(set.view = c(50, 50, 4))
-    # 
-    # leaflet(mapdata) %>% 
-    #   addProviderTiles(providers$Wikimedia,
-    #                    options = providerTileOptions(detectRetina = TRUE)) %>% 
-    #   addPolygons(data = data$back,
-    #               color = "#000000",
-    #               fillOpacity = 0,
-    #               opacity = 0.2,
-    #               weight = 4) %>% 
-    #   addPolygons(color = "#444444",
-    #               weight = 0.5,
-    #               smoothFactor = 0.5,
-    #               opacity = 1,
-    #               fillOpacity = 0.8,
-    #               fillColor = ~qpal(VALUE),
-    #               highlightOptions = highlightOptions(
-    #                 color = "white", 
-    #                 # bringToFront = TRUE, 
-    #                 # sendToBack = TRUE,
-    #                 weight = 2),
-    #               label = labels,
-    #               labelOptions = labelOptions(
-    #                 textsize = "14px",
-    #                 direction = "auto")
-    #   ) %>% 
-    #   addLegend(pal = legendpal, 
-    #             values = ~VALUE, 
-    #             opacity = 1, 
-    #             title = unit,
-    #             labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE))) %>%
-    #   addPolylines(data = data$rus_border, 
-    #                color = "#000000", 
-    #                smoothFactor = 0.5,
-    #                opacity = 0.2, 
-    #                weight = 5) %>% 
-    #   addPolylines(data = data$rus_border, 
-    #                color = "#000000", 
-    #                smoothFactor = 0.5,
-    #                opacity = 0.8, 
-    #                weight = 1) %>% 
-    #   addCircleMarkers(data = data$cities, 
-    #                    radius = 2,
-    #                    weight = 1,
-    #                    color = 'black',
-    #                    label = ~htmltools::htmlEscape(NAME_RU),
-    #                    labelOptions = labelOptions(
-    #                      permanent = T,
-    #                      # noHide = F,
-    #                      textOnly = TRUE,
-    #                      offset = c(3,-3),
-    #                      style = list("padding" = "5 px")
-    #                    )
-    #   ) %>% 
-    #   addCircleMarkers(data = data$capitals, 
-    #                    radius = 3,
-    #                    weight = 1,
-    #                    color = 'black',
-    #                    label = ~htmltools::htmlEscape(NAME_RU),
-    #                    labelOptions = labelOptions(
-    #                      permanent = T,
-    #                      # noHide = F,
-    #                      textOnly = TRUE,
-    #                      offset = c(5,-5),
-    #                      style = list("padding" = "5 px",
-    #                                   "font-style" = "semibold",
-    #                                   "font-size" = "12px")
-    #                    )) %>% 
-    #   setView(lat = 50, lng = 50, zoom = 4)
-  } else {
-    
-    tmap_mode("view")
-    ## tmap mode set to interactive viewing
-    tm_basemap('OpenStreetMap') +
-      tm_shape(data$back) +
-        tm_borders(col = "black",
-                 alpha = 0.2,
-                 lwd = 4) +
-      tm_shape(mapdata) + 
-        tm_polygons(alpha = 0.5, 
-                    col = 'white',
-                    lwd = 1) +
-      tm_shape(data$rus_border) +
-        tm_lines(col = "black",
-                 alpha = 0.2,
-                 lwd = 5) +
-        tm_lines(col = "black",
-                 alpha = 0.8,
-                 lwd = 1) +
-      tm_shape(data$cities) +
-        tm_dots(shape = 19, col = 'white', alpha = 0.8, size = 0.01) +
-        tm_text('NAME_RU', auto.placement = TRUE, remove.overlap = TRUE) +
-      tm_shape(mapdata) + 
-        tm_bubbles(size = "VALUE", 
-                   col = "red", 
-                   legend.max.symbol.size = 5,
-                   scale = 4, alpha = 0.5) +
-      tm_view(set.view = c(50, 50, 4))
-    
-    # m = addCircles(m, lng = ~lon, lat = ~lat, weight = 1,
-    #                radius = ~VALUE * 0.01)
+  lines2 = list()
+  xcenters2 = vector()
+  for (i in 1:nrow(regionsfor)){
+    line[["y0"]] = regionsfor[i, "distance"]
+    line[["y1"]] = regionsfor[i, "distance"]
+    line[["x0"]] = ymin
+    line[["x1"]] = 0
+    lines2 = c(lines2, list(line))
+    xcenters2[i] = mean(c(regionsfor[i, "distance"],regionsfor[i+1, "distance"]))
   }
+  xcenters2[i] = regionsfor[i, "distance"] + 0.5 * regionsfor[i, "LENGTH"]
   
+  # Формируем входные данные для рисования
+  xvals = plotdata %>% filter(YEAR == year[1]) %>% pull(distance)
+  yvals = plotdata %>% filter(YEAR == year[1]) %>% pull(gradient)
+  tvals = plotdata %>% filter(YEAR == year[1]) %>% pull(NAME2)
+  
+  n = length(xvals)
+  xvals[n+1] = xvals[n] + plotdata[nrow(plotdata), "LENGTH"]
+  yvals[n+1] = yvals[n]
+  tvals[n+1] = NA
+  
+  xvals2 = plotdata %>% filter(YEAR == year[2]) %>% pull(distance)
+  yvals2 = plotdata %>% filter(YEAR == year[2]) %>% pull(gradient)
+  tvals2 = plotdata %>% filter(YEAR == year[2]) %>% pull(NAME2)
+  
+  n = length(xvals2)
+  xvals2[n+1] = xvals[n] + plotdata[nrow(plotdata), "LENGTH"]
+  yvals2[n+1] = yvals[n]
+  tvals2[n+1] = NA
+  
+  # рисуем
+  plot_ly(x = yvals, 
+          y = xvals, 
+          type = 'scatter', 
+          mode = 'lines', 
+          fill = 'tozerox',
+          name = year[1],
+          text = tvals,
+          line = list(shape = "hv")) %>%
+    add_trace(x = yvals2,
+              y = xvals2,
+              name = year[2],
+              text = tvals2,
+              fill = 'tozerox') %>%
+    layout(yaxis = list(title = 'Расстояние, км', 
+                        autorange = "reversed",
+                        showgrid = FALSE),
+           xaxis = list(title = 'Градиент',
+                        gridwidth = 0.1,
+                        gridcolor = toRGB("gray95")),
+           shapes = c(lines1, lines2, lines)) %>%
+    add_annotations(y = xcenters,
+                    x = 0, #ymin - 0.05 * abs(ymin),
+                    text = countries$COUNTRY,
+                    font = list(sfamily = 'sans serif bold',
+                                size = 14),
+                    # bgcolor = 'white',
+                    xref = "x",
+                    yref = "y",
+                    showarrow = FALSE) %>%
+    add_annotations(y = xcenters2,
+                    x = 0.5*ymin,
+                    font = list(size = 10),
+                    text = regionsfor$NAME2,
+                    # textangle = -90,
+                    xref = "x",
+                    yref = "y",
+                    showarrow = FALSE) %>%
+    add_annotations(y = xcenters1,
+                    x = 0.7*ymax,
+                    font = list(size = 10),
+                    text = regionsrf$NAME1,
+                    # textangle = -90,
+                    xref = "x",
+                    yref = "y",
+                    showarrow = FALSE)
 }
