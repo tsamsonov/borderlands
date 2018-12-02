@@ -25,7 +25,7 @@
 <meta name="author" content="Лаборатория геополитических исследований ИГ РАН">
 
 
-<meta name="date" content="2018-11-22">
+<meta name="date" content="2018-12-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 
-<link rel="next" href="pop.html">
+<link rel="next" href="-.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -64,6 +64,10 @@
 <script src="libs/leaflet-binding-2.0.2/leaflet.js"></script>
 <script src="libs/leaflet-providers-1.1.17/leaflet-providers.js"></script>
 <script src="libs/leaflet-providers-plugin-2.0.2/leaflet-providers-plugin.js"></script>
+<script src="libs/plotly-binding-4.8.0/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.39.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.39.2/plotly-latest.min.js"></script>
 
 
 
@@ -84,18 +88,23 @@
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Введение</a></li>
-<li class="chapter" data-level="1" data-path="pop.html"><a href="pop.html"><i class="fa fa-check"></i><b>1</b> Население</a><ul>
-<li class="chapter" data-level="1.1" data-path="pop.html"><a href="pop.html#demo-dens"><i class="fa fa-check"></i><b>1.1</b> Размещение и плотность населения</a></li>
-<li class="chapter" data-level="1.2" data-path="pop.html"><a href="pop.html#demo-urban"><i class="fa fa-check"></i><b>1.2</b> Городское и сельское расселение</a></li>
-<li class="chapter" data-level="1.3" data-path="pop.html"><a href="pop.html#demo-dens"><i class="fa fa-check"></i><b>1.3</b> Размещение и плотность населения</a></li>
-<li class="chapter" data-level="1.4" data-path="pop.html"><a href="pop.html#demo-situ"><i class="fa fa-check"></i><b>1.4</b> Демографическая ситуация</a><ul>
-<li class="chapter" data-level="1.4.1" data-path="pop.html"><a href="pop.html#demo-situ-pop"><i class="fa fa-check"></i><b>1.4.1</b> Численность населения</a></li>
-<li class="chapter" data-level="1.4.2" data-path="pop.html"><a href="pop.html#demo-situ-re"><i class="fa fa-check"></i><b>1.4.2</b> Естественное движение населения</a></li>
-<li class="chapter" data-level="1.4.3" data-path="pop.html"><a href="pop.html#demo-situ-bir"><i class="fa fa-check"></i><b>1.4.3</b> Рождаемость</a></li>
-<li class="chapter" data-level="1.4.4" data-path="pop.html"><a href="pop.html#demo-situ-dea"><i class="fa fa-check"></i><b>1.4.4</b> Смертность</a></li>
-<li class="chapter" data-level="1.4.5" data-path="pop.html"><a href="pop.html#demo-situ-bab"><i class="fa fa-check"></i><b>1.4.5</b> Младенческая смертность</a></li>
-<li class="chapter" data-level="1.4.6" data-path="pop.html"><a href="pop.html#demo-situ-long"><i class="fa fa-check"></i><b>1.4.6</b> Продолжительность жизни</a></li>
-<li class="chapter" data-level="1.4.7" data-path="pop.html"><a href="pop.html#demo-situ-mig"><i class="fa fa-check"></i><b>1.4.7</b> Миграции</a></li>
+<li class="chapter" data-level="" data-path="-.html"><a href="-.html"><i class="fa fa-check"></i>Список аббревиатур</a></li>
+<li class="chapter" data-level="1" data-path="geopol.html"><a href="geopol.html"><i class="fa fa-check"></i><b>1</b> Геополитическое положение</a><ul>
+<li class="chapter" data-level="1.1" data-path="geopol.html"><a href="geopol.html#geopol-hist"><i class="fa fa-check"></i><b>1.1</b> История, морфология и современное состояние</a></li>
+<li class="chapter" data-level="1.2" data-path="geopol.html"><a href="geopol.html#geopol-foreign"><i class="fa fa-check"></i><b>1.2</b> Внешнеполитические ориентиры и интеграционные объединения</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="pop.html"><a href="pop.html"><i class="fa fa-check"></i><b>2</b> Население</a><ul>
+<li class="chapter" data-level="2.1" data-path="pop.html"><a href="pop.html#demo-dens"><i class="fa fa-check"></i><b>2.1</b> Размещение и плотность населения</a></li>
+<li class="chapter" data-level="2.2" data-path="pop.html"><a href="pop.html#demo-urban"><i class="fa fa-check"></i><b>2.2</b> Городское и сельское расселение</a></li>
+<li class="chapter" data-level="2.3" data-path="pop.html"><a href="pop.html#demo-dens"><i class="fa fa-check"></i><b>2.3</b> Размещение и плотность населения</a></li>
+<li class="chapter" data-level="2.4" data-path="pop.html"><a href="pop.html#demo-situ"><i class="fa fa-check"></i><b>2.4</b> Демографическая ситуация</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="pop.html"><a href="pop.html#demo-situ-pop"><i class="fa fa-check"></i><b>2.4.1</b> Численность населения</a></li>
+<li class="chapter" data-level="2.4.2" data-path="pop.html"><a href="pop.html#demo-situ-re"><i class="fa fa-check"></i><b>2.4.2</b> Естественное движение населения</a></li>
+<li class="chapter" data-level="2.4.3" data-path="pop.html"><a href="pop.html#demo-situ-bir"><i class="fa fa-check"></i><b>2.4.3</b> Рождаемость</a></li>
+<li class="chapter" data-level="2.4.4" data-path="pop.html"><a href="pop.html#demo-situ-dea"><i class="fa fa-check"></i><b>2.4.4</b> Смертность</a></li>
+<li class="chapter" data-level="2.4.5" data-path="pop.html"><a href="pop.html#demo-situ-bab"><i class="fa fa-check"></i><b>2.4.5</b> Младенческая смертность</a></li>
+<li class="chapter" data-level="2.4.6" data-path="pop.html"><a href="pop.html#demo-situ-long"><i class="fa fa-check"></i><b>2.4.6</b> Продолжительность жизни</a></li>
+<li class="chapter" data-level="2.4.7" data-path="pop.html"><a href="pop.html#demo-situ-mig"><i class="fa fa-check"></i><b>2.4.7</b> Миграции</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -121,7 +130,7 @@
 <div id="header">
 <h1 class="title">Атлас Российского пограничья</h1>
 <h4 class="author"><em>Лаборатория геополитических исследований ИГ РАН</em></h4>
-<h4 class="date"><em>2018-11-22</em></h4>
+<h4 class="date"><em>2018-12-02</em></h4>
 </div>
 <div id="d092d0b2d0b5d0b4d0b5d0bdd0b8d0b5" class="section level1 unnumbered">
 <h1>Введение</h1>
@@ -137,7 +146,7 @@
         </div>
       </div>
 
-<a href="pop.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="-.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
