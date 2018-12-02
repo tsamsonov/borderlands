@@ -11,6 +11,7 @@ rmd_files:
     - "05-Trans.Rmd"
     - "06-Ecosystems.Rmd"
     - "07-Conflicts.Rmd"
+    - "08-Borders.Rmd"
 new_session: yes
 language:
   label:

@@ -24,7 +24,7 @@
 
 > ГРАДИЕНТЫ: Внутренний региональный продукт, 2016 г.
 
-<div class="figure">
+<div class="figure" style="text-align: center">
 <img src="img/04_RegionTypes.png" alt="Типология регионов по соотношению ВРП с регионами-соседями" width="716" />
 <p class="caption">(\#fig:regvrp)Типология регионов по соотношению ВРП с регионами-соседями</p>
 </div>
@@ -65,7 +65,7 @@
 
 > КАРТА: Средняя урожайность зерновых культур, 2009-2016 г.
 
-<div class="figure">
+<div class="figure" style="text-align: center">
 <img src="img/04_StructTypes.png" alt="Основные структурные типы валового регионального продукта" width="716" />
 <p class="caption">(\#fig:strvrp)Основные структурные типы валового регионального продукта</p>
 </div>

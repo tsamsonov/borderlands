@@ -1,7 +1,7 @@
 # Население {#pop}
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.align = 'center')
 library(leaflet)
 library(classInt)
 library(plotly)

@@ -1,7 +1,7 @@
 # Конфликты {#conflicts}
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center')
 ```
 
 ## Частично признанные государства вблизи российских границ {#conflicts-partial}

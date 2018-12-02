@@ -1,7 +1,7 @@
 # Уровень жизни населения {#econ}
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center')
 ```
 
 ## Социально-экономическая ситуация и диспропорции развития {#econ-dispro}

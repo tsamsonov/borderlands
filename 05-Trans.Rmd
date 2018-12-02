@@ -1,7 +1,7 @@
 # Динамика трансграничных взаимодействий {#trans}
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center')
 ```
 
 ## Трансграничные потоки и барьерность государственной границы {#trans-flow}
