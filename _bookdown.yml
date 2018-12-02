@@ -9,6 +9,7 @@ rmd_files:
     - "03-Quality.Rmd"
     - "04-Economy.Rmd"
     - "05-Trans.Rmd"
+    - "06-Ecosystems.Rmd"
 new_session: yes
 language:
   label:
