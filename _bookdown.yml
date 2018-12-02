@@ -8,6 +8,7 @@ rmd_files:
     - "02-Demography.Rmd"
     - "03-Quality.Rmd"
     - "04-Economy.Rmd"
+    - "05-Trans.Rmd"
 new_session: yes
 language:
   label:
