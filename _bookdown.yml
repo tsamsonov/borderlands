@@ -7,6 +7,7 @@ rmd_files:
     - "01-Geopolitics.Rmd"
     - "02-Demography.Rmd"
     - "03-Quality.Rmd"
+    - "04-Economy.Rmd"
 new_session: yes
 language:
   label:

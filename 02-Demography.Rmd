@@ -230,5 +230,6 @@ mapplot(data, 7, 2016, palette = 'Greens')
 ```{r, out.width = '100%'}
 mapplot(data, 4, 2016, palette = 'RdYlGn')
 ```
-
-> Коэффициент миграционного прироста на 2016 г.
+```{r mig16, fig.height=0.01, fig.cap="Коэффициент миграционного прироста на 2016 г."}
+knitr::include_graphics('img/dummy.png')
+```
