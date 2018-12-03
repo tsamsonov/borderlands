@@ -19,6 +19,7 @@ mainfont: Open Sans
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(widgetframe_widgets_dir = 'widgets') 
 ```
 
 # Введение {-}

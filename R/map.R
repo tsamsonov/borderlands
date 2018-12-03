@@ -119,14 +119,16 @@ mapplot <- function(data, idxid, year, normalize = 'percentage',
     # tm_view(set.view = c(50, 50, 4))
 
     leaflet() %>%
+      addMapPane(name = "Back", zIndex = 410) %>%
       addMapPane(name = "Data", zIndex = 420) %>%
       addMapPane(name = "Labels", zIndex = 430) %>% # higher zIndex rendered on top
-      addProviderTiles("OpenStreetMap.Mapnik") %>%
+      addProviderTiles(providers$CartoDB.PositronNoLabels,
+                       options = providerTileOptions(pane = "Back")) %>%
       # addProviderTiles(providers$OpenStreetMap.BlackAndWhite,
       #                  options = providerTileOptions(detectRetina = TRUE)) %>%
-      addPolygons(data = data$back,
+      addPolygons(data = mapdata,
                   # group = "Data",
-                  options = pathOptions(pane = "Data"),
+                  options = pathOptions(pane = "Back"),
                   color = "#000000",
                   fillOpacity = 0,
                   opacity = 0.2,
@@ -142,8 +144,8 @@ mapplot <- function(data, idxid, year, normalize = 'percentage',
                   fillOpacity = 0.8,
                   highlightOptions = highlightOptions(
                     color = "white",
-                    # bringToFront = TRUE,
-                    # sendToBack = TRUE,
+                    bringToFront = TRUE,
+                    sendToBack = TRUE,
                     weight = 2),
                   label = labels,
                   labelOptions = labelOptions(
@@ -158,7 +160,7 @@ mapplot <- function(data, idxid, year, normalize = 'percentage',
                 labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE))) %>%
       addPolylines(data = data$rus_border,
                    # group = "Data",
-                   options = pathOptions(pane = "Data"),
+                   options = pathOptions(pane = "Labels"),
                    color = "#000000",
                    smoothFactor = 0.5,
                    opacity = 0.2,
@@ -170,45 +172,56 @@ mapplot <- function(data, idxid, year, normalize = 'percentage',
                    smoothFactor = 0.5,
                    opacity = 0.8,
                    weight = 1) %>%
-      addCircleMarkers(data = data$cities,
-                       # group = "Labels",
-                       options = pathOptions(pane = "Labels"),
-                       radius = 2,
-                       weight = 1,
-                       color = 'black',
-                       label = ~htmltools::htmlEscape(NAME_RU),
-                       labelOptions = labelOptions(
-                         # permanent = T,
-                         noHide = F,
-                         textOnly = TRUE,
-                         offset = c(3,-3),
-                         style = list("padding" = "5 px")
-                       )
+      # addCircleMarkers(data = data$cities,
+      #                  # group = "Labels",
+      #                  options = pathOptions(pane = "Labels"),
+      #                  radius = 2,
+      #                  weight = 1,
+      #                  color = 'black',
+      #                  label = ~htmltools::htmlEscape(NAME_RU),
+      #                  labelOptions = labelOptions(
+      #                    # permanent = T,
+      #                    noHide = F,
+      #                    textOnly = TRUE,
+      #                    offset = c(3,-3),
+      #                    style = list("padding" = "5 px")
+      #                  )
+      # ) %>%
+      # addCircleMarkers(data = data$capitals,
+      #                  # group = "Data",
+      #                  options = pathOptions(pane = "Labels"),
+      #                  radius = 3,
+      #                  weight = 1,
+      #                  color = 'black',
+      #                  label = ~htmltools::htmlEscape(NAME_RU),
+      #                  labelOptions = labelOptions(
+      #                    permanent = T,
+      #                    noHide = F,
+      #                    textOnly = TRUE,
+      #                    offset = c(5,-5),
+      #                    style = list("padding" = "5 px",
+      #                                 "font-style" = "semibold",
+      #                                 "font-size" = "12px")
+      #                  )) %>%
+      # addProviderTiles(providers$Hydda.RoadsAndLabels,
+      #                  # group = "Labels",
+      #                  options = providerTileOptions(pane = "Labels", opacity = 0.5)
+      # ) %>%
+      
+      addWMSTiles(
+        "http://autolab.geogr.msu.ru:8080/geoserver/ows?",
+        layers = "ne:ncclpd_cities",
+        options = WMSTileOptions(format = "image/png", transparent = TRUE, 
+                                 opacity = 0.8,
+                                 # detectRetina = TRUE, 
+                                 pane = "Labels")
       ) %>%
-      addCircleMarkers(data = data$capitals,
-                       # group = "Data",
-                       options = pathOptions(pane = "Data"),
-                       radius = 3,
-                       weight = 1,
-                       color = 'black',
-                       label = ~htmltools::htmlEscape(NAME_RU),
-                       labelOptions = labelOptions(
-                         permanent = T,
-                         noHide = F,
-                         textOnly = TRUE,
-                         offset = c(5,-5),
-                         style = list("padding" = "5 px",
-                                      "font-style" = "semibold",
-                                      "font-size" = "12px")
-                       )) %>%
-      addProviderTiles("Hydda.RoadsAndLabels",
-                       # group = "Labels",
-                       options = pathOptions(pane = "Labels")
-      ) %>%
+    
       # addLayersControl(baseGroups = "OpenStreetMap.Mapnik",
       #                  overlayGroups = c("Labels",
       #                                    "Data")) %>% 
-      setView(lat = 50, lng = 50, zoom = 4)
+      setView(lat = 50, lng = 50, zoom = 4) %>% 
+      frameWidget(width = '100%')
     
     # map
   } else {

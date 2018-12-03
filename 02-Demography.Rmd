@@ -9,6 +9,7 @@ library(dplyr)
 library(tmap)
 library(DT)
 library(sf)
+library(widgetframe)
 source('R/map.R')
 source('R/plot.R')
 
@@ -52,7 +53,7 @@ gradients = st_read('data/boundaries.gpkg',
   st_set_geometry(NULL)
   
 rus_border = borders %>% 
-  dplyr::filter(adm0_left == 'Russia' | adm0_right == 'Russia') %>% as('Spatial')
+  dplyr::filter(adm0_left == 'Russia' | adm0_right == 'Russia')# %>% as('Spatial')
 
 data = tibble::lst(values, indexes, regions, cities, capitals, 
                    back, borders, rus_border, gradients)
