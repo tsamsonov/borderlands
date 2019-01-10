@@ -3,6 +3,7 @@ chapter_name: "Глава "
 output_dir: docs
 rmd_files:
     - "index.Rmd"
+    - "intro.Rmd"
     - "abbrev.Rmd"
     - "01-Geopolitics.Rmd"
     - "02-Demography.Rmd"

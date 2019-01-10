@@ -248,5 +248,5 @@ mapplot <- function(data, idxid, year, normalize = 'percentage',
                                pane = "Labels")
     ) %>%
     setView(lat = 50, lng = 50, zoom = 4) %>% 
-    frameWidget(width = '100%', height = 410)
+    frameWidget(width = '100%', height = 420)
 }
