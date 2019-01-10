@@ -81,6 +81,6 @@ data = tibble::lst(values, indexes, regions, cities, capitals,
 
 # {-}
 
-```{r}
+```{r, fig.align='left'}
 knitr::include_graphics('img/title.png')
 ```
