@@ -12,7 +12,7 @@ rmd_files:
     - "06-Ecosystems.Rmd"
     - "07-Conflicts.Rmd"
     - "08-Borders.Rmd"
-new_session: yes
+#new_session: yes
 language:
   label:
     fig: 'Рис. '
