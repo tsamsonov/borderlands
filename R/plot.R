@@ -2,6 +2,16 @@
 # year = c(2009, 2016)
 # segment = 2
 
+get_segment_title = function(segment) {
+  switch(as.character(segment),
+         '1' = 'Норвегия—Финляндия',
+         '2' = 'Эстония-Латвия—Беларусь—Украина',
+         '3' = 'Кавказ',
+         '4' = 'Казахстан',
+         '5' = 'Китай—Монголия—КНДР',
+         '6' = 'Литва-Польша')
+}
+
 gradplot = function(data, idxid, year, segment) {
   tab = data$values %>% 
     dplyr::filter(IDXID == idxid, YEAR %in% year)
@@ -132,9 +142,10 @@ gradplot = function(data, idxid, year, segment) {
     layout(yaxis = list(title = 'Расстояние, км', 
                         autorange = "reversed",
                         showgrid = FALSE),
-           xaxis = list(title = 'Градиент',
+           xaxis = list(title = '',
                         gridwidth = 0.1,
                         gridcolor = toRGB("gray95")),
+           title = get_segment_title(segment),
            shapes = c(lines1, lines2, lines)) %>%
     add_annotations(y = xcenters,
                     x = 0, #ymin - 0.05 * abs(ymin),
