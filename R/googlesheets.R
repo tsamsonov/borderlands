@@ -1,7 +1,10 @@
 library(DBI)
 library(dplyr)
 library(tidyr)
-library(googlesheets)
+library(googlesheets4)
+
+token_tables = '156ysLkR-T4qIs8_M5XEL9t-ZF6bONtfw6eweq-Cojuc'
+token_idx = '1AVYkP3GTQY3LHUYF8M4LYhelsKYCFyVk7Y5yJHI-yhc'
 
 tidy_tbls <- function(tbls){
   
@@ -52,32 +55,37 @@ con <- dbConnect(RSQLite::SQLite(),
 
 # Load INDEXES ------------------------------------------------------------
 
-idx = gs_title('Показатели') %>% gs_read()
-dbWriteTable(con, c("INDEXES"), value=idx, overwrite=TRUE, row.names=FALSE)
+# idx = read_sheet(token_idx)
+# dbWriteTable(con, c("INDEXES"), value=idx, overwrite=TRUE, row.names=FALSE)
 
-# my_sheets <- gs_ls()
+# Load TABLES ------------------------------------------------------------
+tbls = read_sheet(token_tables)
 
 # Load VALUES -------------------------------------------------------------
 
+# endrows = c(
+#   '1а. Демографические показатели - ГОСУДАРСТВА' = 19,
+#   '1б. Демографические показатели - РЕГИОНЫ' = 95
+# )
 
-endrows = c(
-  '1а. Демографические показатели - ГОСУДАРСТВА' = 19,
-  '1б. Демографические показатели - РЕГИОНЫ' = 95
-)
+ids = c(21, 22)
+sheets = list(1:5, 1:5)
+
+load_tbls = tbls %>% filter(id %in% ids)
 
 out_table = NULL
 
-for (i in 1:length(endrows)) {
+for (i in 1:length(ids)) {
   
-  endrow = endrows[i]
-  tbl_name = attr(endrow, 'name') %>% gs_title()
+  endrow = load_tbls %>% slice(i) %>% pull(endrow)
+  tbl_name = load_tbls %>% slice(i) %>% pull(token)
   
-  vars =  gs_ws_ls(tbl_name)
+  vars = sheets_get(tbl_name)$sheets$name[sheets[[i]]]
   
-  tbls = lapply(vars, function(X) gs_read(tbl_name, 
-                                          ws = X,
-                                          col_types = readr::cols(.default = "c"),
-                                          range = cell_rows(2:endrow)))
+  tbls = lapply(vars, function(X) read_sheet(tbl_name, 
+                                             sheet = X,
+                                             col_types = 'c',
+                                             range = cell_rows(2:endrow)))
   
   res = tbls %>% 
     tidy_tbls() %>% 
@@ -91,5 +99,10 @@ for (i in 1:length(endrows)) {
 
 }
 
+copy_to(con, out_table, name = 'ADD')
+dbSendQuery(con, 'REPLACE INTO "VALUES" SELECT * FROM "ADD"')
+dbDisconnect(con)
+  
+
 # Load to DB --------------------------------------------------------
-dbWriteTable(con, c("VALUES"), value=out_table, overwrite=TRUE, row.names=FALSE)
+# dbWriteTable(con, c("VALUES"), value = out_table, append = TRUE, row.names = FALSE)
