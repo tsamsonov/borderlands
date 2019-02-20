@@ -96,7 +96,7 @@ mapplot <- function(data, idxid, year, normalize = 'percentage',
   breaks = NULL
   
   if (bipolar == 1)
-    breaks = class_bipolar(mapdata$VALUE, intervals, style)
+    breaks = unique(class_bipolar(mapdata$VALUE, intervals, style))
   else
     breaks = unique(classIntervals(mapdata$VALUE, intervals, style)$brks)
     
